@@ -1,6 +1,9 @@
 import java.util.concurrent.*;
 public class Test {
     public static void main(String[]args) throws InterruptedException {
+    	
+    	System.out.println("----:"+Runtime.getRuntime().availableProcessors());
+    	
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         final int loopCount=2000000;
         final CountDownLatch latch = new CountDownLatch(loopCount);
