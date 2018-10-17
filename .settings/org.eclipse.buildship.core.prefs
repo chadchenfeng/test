@@ -1,0 +1,8 @@
+auto.sync=false
+build.scans.enabled=false
+connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(E\:\\work\\hardwork\\gradle-2.14.1))
+connection.project.dir=
+eclipse.preferences.version=1
+gradle.user.home=E\:/work/hardwork/gradle-2.14.1
+offline.mode=false
+override.workspace.settings=true
