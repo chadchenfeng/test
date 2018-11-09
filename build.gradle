@@ -30,8 +30,10 @@ dependencies {
     compile 'org.apache.hbase:hbase-client:0.96.2-hadoop2'
     compile 'io.netty:netty-microbench:4.1.29.Final'
     compile 'org.apache.poi:poi:4.0.0'
+   // compile 'org.apache.poi:poi-ooxml:4.0.0'
     compile 'com.aliyun.odps:odps-sdk-core:0.26.6-public'
-    
+    compile 'org.jfree:jfreechart:1.5.0'
+    compile 'org.freemarker:freemarker:2.3.28'
 
     //compile 'io.reactivex:rxjava2:2.1.7'
 
