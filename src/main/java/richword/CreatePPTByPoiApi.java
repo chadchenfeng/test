@@ -28,7 +28,7 @@ import org.apache.poi.xslf.usermodel.XSLFTextParagraph;
 import org.apache.poi.xslf.usermodel.XSLFTextRun;
 import org.apache.poi.xslf.usermodel.XSLFTextShape;
 
-public class CreatePPTtest {
+public class CreatePPTByPoiApi {
 
 	public static void main(String[] args) throws Exception {
 		List<Map<String,String>> data=new ArrayList<>();
