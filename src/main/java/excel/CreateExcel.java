@@ -92,7 +92,7 @@ public class CreateExcel {
 		HSSFRow pinxiangrow = pinxiangsheet.createRow(0);
 		//设置单元格式
 		HSSFCellStyle style = wb.createCellStyle();
-		style.setAlignment(HorizontalAlignment.CENTER); //居中
+//		style.setAlignment(HorizontalAlignment.CENTER); //居中
 		
 		//第四步创建单元格
 		Properties properties=null;

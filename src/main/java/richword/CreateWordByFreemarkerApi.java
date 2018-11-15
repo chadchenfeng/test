@@ -69,7 +69,7 @@ public class CreateWordByFreemarkerApi {
 		InputStream in=new FileInputStream("F:/tmp/dataworks/单uv成本柱状图.png");
 		String imageString = getImageString(in);
 		map.put("historical_trend_image", imageString);
-		String filename="F:/tmp/dataworks/山东.docx";
+		String filename="F:/tmp/dataworks/山东1.docx";
 		String templatepath="/richword";
 		String templatename="fp2_template.ftl";
 		new CreateWordByFreemarkerApi().createDocumentBytemplate(map,templatepath,templatename,filename);

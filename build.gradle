@@ -29,17 +29,28 @@ dependencies {
     compile 'org.glassfish.jersey.bundles:jaxrs-ri:2.27'
     compile 'org.apache.hbase:hbase-client:0.96.2-hadoop2'
     compile 'io.netty:netty-microbench:4.1.29.Final'
-    compile 'org.apache.poi:poi:4.0.0'
-   // compile 'org.apache.poi:poi-ooxml:4.0.0'
+
     compile 'com.aliyun.odps:odps-sdk-core:0.26.6-public'
     compile 'org.jfree:jfreechart:1.5.0'
     compile 'org.freemarker:freemarker:2.3.28'
+    compile 'redis.clients:jedis:2.9.0'
+    //word转pdf
+    compile 'fr.opensagres.xdocreport:org.apache.poi.xwpf.converter.pdf:1.0.6'
+    compile 'com.itextpdf:itext-asian:5.2.0'
+    compile 'com.itextpdf:itextpdf:5.4.3'
+    compile 'org.xhtmlrenderer:flying-saucer-pdf-itext5:9.1.16'
+    compile 'com.itextpdf.tool:xmlworker:5.5.13'
+    
+    //ppt api
+    compile 'org.apache.poi:poi:4.0.0'
+    compile 'org.apache.poi:poi-ooxml:4.0.0'
+    
+ //   compile 'fr.opensagres.xdocreport:xdocreport:2.0.1'
+    
+//    compile 'com.artofsolving:jodconverter:2.2.1'
 
     //compile 'io.reactivex:rxjava2:2.1.7'
 
-    // Declare the dependency for your favourite test framework you want to use in your tests.
-    // TestNG is also supported by the Gradle Test task. Just change the
-    // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
-    // 'test.useTestNG()' to your build script.
+  
     testCompile 'junit:junit:4.12'
 }

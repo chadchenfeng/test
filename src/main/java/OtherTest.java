@@ -78,6 +78,8 @@ public class OtherTest {
 		System.out.println(getTicket("feng.chen"));
 		
 		System.out.println("5".compareTo("4")>=0);
+		
+		System.out.println(Integer.MAX_VALUE);
 	}
 	
 	public static String getTicket(String userId) {
