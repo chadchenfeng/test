@@ -30,7 +30,7 @@ import com.itextpdf.tool.xml.XMLWorkerHelper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class CreatePdfByFreemarkerApi {
+public class CreatePdfByPoiApi {
 
 	public static void main(String[] args) throws Exception {
 String currentday = new SimpleDateFormat("yyyyMMdd").format(new Date());
@@ -68,9 +68,9 @@ String currentday = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String templatename="freemarker_pdf_template.ftl";
 		String temp_htmlurl="F:/tmp/dataworks/pdf_html3.html";
 		String pdfUrl="F:/tmp/dataworks/pdf_test3.pdf";
-		new CreatePdfByFreemarkerApi().createHtmlBytemplate(map,templatepath,templatename,temp_htmlurl);
+		new CreatePdfByPoiApi().createHtmlBytemplate(map,templatepath,templatename,temp_htmlurl);
 //		new CreatePdfByFreemarkerApi().convertHtmlToPdf(temp_htmlurl, pdfUrl);
-		new CreatePdfByFreemarkerApi().convertHtml2Pdf(temp_htmlurl, pdfUrl);
+		new CreatePdfByPoiApi().convertHtml2Pdf(temp_htmlurl, pdfUrl);
 		
 
 	}
