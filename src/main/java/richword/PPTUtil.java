@@ -28,7 +28,7 @@ import org.apache.poi.xslf.usermodel.XSLFTextParagraph;
 import org.apache.poi.xslf.usermodel.XSLFTextRun;
 import org.apache.poi.xslf.usermodel.XSLFTextShape;
 
-public class CreatePPTByPoiApi {
+public class PPTUtil {
 
 	public static void main(String[] args) throws Exception {
 		List<Map<String,String>> data=new ArrayList<>();
@@ -74,9 +74,9 @@ public class CreatePPTByPoiApi {
 		data2.add(map6);
 		
 		Map<String,Object> map=new HashMap<>();
-		map.put("line_image", "F:/tmp/dataworks/单uv成本折线图.png");
-		map.put("bar_image", "F:/tmp/dataworks/单uv成本折线图.png");
 		map.put("history", "F:/tmp/dataworks/单uv成本折线图.png");
+		map.put("bar_image", "F:/tmp/dataworks/单uv成本.png");
+		map.put("line_image", "F:/tmp/dataworks/ad_distribution_image.png");
 		map.put("company_name", "山东伊怡");
 		map.put("total_cooperation", "1000");
 		map.put("proportion", "1/3");
@@ -89,12 +89,54 @@ public class CreatePPTByPoiApi {
 		map.put("order", data);
 		map.put("scan", data1);
 		map.put("rate", data2);
+		map.put("new_users", "7000");
+		map.put("revenue", "35000");
+		
+		Map<String, String> readPPTParams = readPPTParams("F:/tmp/template/gdt_operating_data_weekly_template.pptx",":");
+		System.out.println("readPPTParams:"+readPPTParams);
 		
 		pptHandler("F:/tmp/ppt_template.pptx",map,"F:/tmp/ppt_template_out.pptx");
+		
 	}
 	
 	/*
-	 * ppt处理入口
+	 * 读取ppt中的参数
+	 * @pptPath  ppt文件
+	 * @charesquence  参数中的分隔符,比如ppt中参数为${font:12},则charesquence 为":"
+	 */
+	public static Map<String,String> readPPTParams(String pptPath,String charesquence) throws FileNotFoundException, IOException{
+		Map<String,String> retmap=new HashMap<>();
+		FileInputStream fileInputStream = new FileInputStream(pptPath);
+		XMLSlideShow ppt=new XMLSlideShow(fileInputStream);
+		List<XSLFSlide> slides = ppt.getSlides();
+		for(XSLFSlide xslfSlide:slides) {
+			List<XSLFShape> shapes = xslfSlide.getShapes();
+			for(int i=0;i<shapes.size();i++) {
+				XSLFShape shape=shapes.get(i);
+				if(shape instanceof XSLFTextShape) {
+					String text = ((XSLFTextShape) shape).getText();
+					List<String> params = getSubUtil(text,"\\$\\{(.+?)\\}");
+					for(String param:params) {
+						if(param.contains(charesquence)) {
+							String[] split = param.split(charesquence);
+							retmap.put(split[0], split[1]);
+						}
+					}
+				}
+			}
+			
+		}
+		ppt.close();
+		fileInputStream.close();
+		
+		return retmap;
+	}
+	
+	/*
+	 * @pptPath   ppt模板文件
+	 * @map       数据源
+	 * @outPpt    输出文件
+	 * 创建ppt处理入口
 	 * 传入数据规则：对普通的字符串参数替换，占位符参数使用text_开头，如：${text_product_name}
 	 * 对图片使用image_开头，如：${image_history_rend}
 	 * 对表格中的值参数，以对象名称开头，如${order|product_name},则数据取自map中的order对象中的数据
@@ -116,11 +158,15 @@ public class CreatePPTByPoiApi {
 					//如果参数是以image_开头的，则为图片的占位符
 					if(params.size()>0 && params.get(0).startsWith("image_"))
 					{
-						for(String param:trimPrefix(params)) {
+						String param=trimPrefix(params).get(0);
+						String image=(String) map.get(param);
+						pictureHandler(xslfSlide,shape,image);
+						i--;
+						/*for(String param:trimPrefix(params)) {
 							String image=(String) map.get(param);
 							pictureHandler(xslfSlide,shape,image);
-							i--;
-						}
+							i--;  //图片需要删除一个shape然后再新增一个shape，因此此处i需要减一，否则会漏图片
+						}*/
 						
 					}else if(params.size()>0 && params.get(0).startsWith("text_")) {
 						textParagraphHandler(shape,trimPrefix(params),map);
@@ -170,11 +216,49 @@ public class CreatePPTByPoiApi {
 		
 	}
 	
-	/*处理表格：先查询出表格中的参数存储，然后再删除表格最后一行参数行，再往表格中添加数据
+	public static void tableHandler(XSLFShape shape,Map<String,Object> datamap) {
+		XSLFTable table=(XSLFTable)shape;
+		List<XSLFTableRow> rows = table.getRows();
+		//查询出表格中的占位符参数
+		XSLFTableRow xslfTableRow = rows.get(rows.size()-1);
+		List<XSLFTableCell> cells = xslfTableRow.getCells();
+		boolean flag=false;//标志是循环插入表格还是直接替换表格中的参数
+		for(XSLFTableCell cell:cells) {
+			if(cell.getText().contains("${") && cell.getText().contains("|")) {
+				flag=true;
+				break;
+			}
+		}
+		if(flag) {
+			tableLoopInsertData(shape,datamap);
+		}else {
+			tableReplaceParams(shape,datamap);
+		}
+	}
+	/*
+	 * 表格处理：将表格中的参数逐个替换,参数：${xxxxx}
+	 */
+	public static void tableReplaceParams(XSLFShape shape,Map<String,Object> datamap) {
+		XSLFTable table=(XSLFTable)shape;
+		List<XSLFTableRow> rows = table.getRows();
+		for(XSLFTableRow row:rows) {
+			List<XSLFTableCell> cells = row.getCells();
+			for(XSLFTableCell cell:cells) {
+				String text = cell.getText();
+				if(text.contains("${") && text.contains("}")) {
+					String key=getSubUtil(text,"\\$\\{(.+?)\\}").get(0);
+					String value=(String) datamap.get(key);
+					cell.setText(value);
+				}
+			}
+		}
+	}
+	
+	/*处理表格：先查询出表格中的参数存储，然后再删除表格最后一行参数行，再往表格中循环添加数据
 	 * shape:表格对象
 	 * data：数据对象
 	 */
-	public static void tableHandler(XSLFShape shape,Map<String,Object> datamap) {
+	public static void tableLoopInsertData(XSLFShape shape,Map<String,Object> datamap) {
 		XSLFTable table=(XSLFTable)shape;
 		List<XSLFTableRow> rows = table.getRows();
 		List<String> paramList=new ArrayList<String>();//存储表格中的占位符参数
@@ -215,9 +299,6 @@ public class CreatePPTByPoiApi {
 	 * 
 	 */
 	public static void pictureHandler(XSLFSlide slide,XSLFShape shape,String imagePath) throws FileNotFoundException, IOException {
-		if(imagePath==null) {
-			return;
-		}
 		XMLSlideShow ppt = slide.getSlideShow();
 		//获取占位符的位置信息
 		Rectangle2D anchor = shape.getAnchor();
@@ -228,6 +309,7 @@ public class CreatePPTByPoiApi {
 		XSLFPictureData addPicture = ppt.addPicture(byteArray, getPictureType(imagePath));
 		XSLFPictureShape createPicture = slide.createPicture(addPicture);
 		createPicture.setAnchor(anchor);
+		
 	}
 	
 	public static PictureType getPictureType(String image) {
@@ -236,10 +318,6 @@ public class CreatePPTByPoiApi {
 			type=XSLFPictureData.PictureType.PNG;
 		}else if(image.endsWith("jpeg")) {
 			type=XSLFPictureData.PictureType.JPEG;
-		}else if(image.endsWith("EMF")) {
-			type=XSLFPictureData.PictureType.EMF;
-		}else if(image.endsWith("WMF")) {
-			type=XSLFPictureData.PictureType.WMF;
 		}
 		return type;
 	}

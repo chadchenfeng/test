@@ -32,6 +32,7 @@ dependencies {
 
     compile 'com.aliyun.odps:odps-sdk-core:0.26.6-public'
     compile 'org.jfree:jfreechart:1.5.0'
+    compile 'org.jfree:jfreesvg:3.3'
     compile 'org.freemarker:freemarker:2.3.28'
     compile 'redis.clients:jedis:2.9.0'
     //word转pdf
@@ -51,6 +52,9 @@ dependencies {
 
     //compile 'io.reactivex:rxjava2:2.1.7'
 
-  
+  	compile 'org.apache.rocketmq:rocketmq-client:4.3.0'
+  	
+  	compile 'batik:batik:1.5'
+  	compile 'org.freehep:freehep-vectorgraphics:2.4'
     testCompile 'junit:junit:4.12'
 }
