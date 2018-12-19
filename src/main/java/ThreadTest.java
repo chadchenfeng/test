@@ -1,11 +1,13 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-
-public class ParentTest  
+public class ThreadTest  
 {  
   
-    public static void main(String[] args)  
+    public static void main(String[] args) throws Exception  
     {  
-        System.out.println("parent thread begin ");  
+       /* System.out.println("parent thread begin ");  
           
         ChildThread t1 = new ChildThread("thread1");  
         ChildThread t2 = new ChildThread("thread2");  
@@ -13,8 +15,18 @@ public class ParentTest
         t2.start();  
   
         System.out.println("parent thread over ");  
+        */
+        ExecutorService threadpool = Executors.newFixedThreadPool(5);
+        threadpool.execute(()->{
+        	for(int i=0;i<10;i++)
+        		System.out.println("线程1--"+i);
+        });
+        
+        threadpool.shutdown();
+        System.out.println("结束！！！！！！");
     }  
-}  
+}
+
   
 class ChildThread extends Thread  
 {  
