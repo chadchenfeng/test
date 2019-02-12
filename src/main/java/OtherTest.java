@@ -95,8 +95,9 @@ public class OtherTest {
 		double u=Double.valueOf(7)/Double.valueOf(4);
 		int unit= (int) Math.round(u);
 		System.out.println("unit:"+unit+" u:"+u);*/
-		
-		System.out.println(8%7);
+		String a="\"miss ‖ 颓废";
+		String b=a.replace(",", " ").replace("\"", " ");
+		System.out.println(b);
 	}
 	
 	public static String getTicket(String userId) {

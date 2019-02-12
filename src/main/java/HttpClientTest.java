@@ -14,7 +14,7 @@ public class HttpClientTest {
 
 	public static void main(String[] args) {
 		//testFetch01();
-		for(int j=0;j<100;j++) {
+		for(int j=0;j<1;j++) {
 			mutilThread();
 		}
 		
@@ -23,11 +23,10 @@ public class HttpClientTest {
 	public static void testFetch01() {
 		try {
 			DefaultHttpClient httpclient=new  DefaultHttpClient();
-			HttpGet httpget=new HttpGet("https://datav.aliyun.com/share/71fdfdddc9e0b4f26781eff09e15e0af");
+			HttpGet httpget=new HttpGet("http://127.0.0.1:8765/service-/hi?name=cf&&token=123");
 			HttpResponse resp = httpclient.execute(httpget);
 			HttpEntity entity = resp.getEntity();
 			if(entity!=null) {
-				
 				InputStream content = entity.getContent();
 				BufferedReader br = new BufferedReader(new InputStreamReader(content,"utf-8")) ;
 				String line=null;
@@ -35,7 +34,7 @@ public class HttpClientTest {
 					System.out.println(line);
 				}
 				String contentCharSet = EntityUtils.getContentCharSet(entity);
-				System.out.println("字符集编码"+contentCharSet);
+				System.out.println("字符集编码"+contentCharSet+" 返回状态："+resp.getStatusLine().getStatusCode());
 				content.close();
 			}
 			httpclient.getConnectionManager().shutdown();
@@ -49,11 +48,12 @@ public class HttpClientTest {
 			
 			@Override
 			public void run() {
-				sendPost();
-				
+//				sendPost();
+				testFetch01();
 			}
 		};
 		for(int i=0;i<10;i++) {
+			System.out.println("============第"+i);
 			new Thread(runnable).start();
 		}
 	}
