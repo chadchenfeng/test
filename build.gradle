@@ -56,5 +56,8 @@ dependencies {
   	
   	compile 'batik:batik:1.5'
   	compile 'org.freehep:freehep-vectorgraphics:2.4'
+  	
+  	implementation 'com.lowagie:itext:4.2.1'
+  	
     testCompile 'junit:junit:4.12'
 }

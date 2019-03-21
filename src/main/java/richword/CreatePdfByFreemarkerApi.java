@@ -23,6 +23,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
@@ -66,9 +67,9 @@ String currentday = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String templatepath="/richword";
 //		String templatename="freemarker_pdf.ftl";
 		String templatename="freemarker_pdf_template.ftl";
-		String temp_htmlurl="F:/tmp/dataworks/pdf_html3.html";
-		String pdfUrl="F:/tmp/dataworks/pdf_test3.pdf";
-		new CreatePdfByFreemarkerApi().createHtmlBytemplate(map,templatepath,templatename,temp_htmlurl);
+		String temp_htmlurl="F:/tmp/无锡市XX钢材加工有限公司16.html";
+		String pdfUrl="F:/tmp/打印无锡市XX钢材加工有限公司16.pdf";
+//		new CreatePdfByFreemarkerApi().createHtmlBytemplate(map,templatepath,templatename,temp_htmlurl);
 //		new CreatePdfByFreemarkerApi().convertHtmlToPdf(temp_htmlurl, pdfUrl);
 		new CreatePdfByFreemarkerApi().convertHtml2Pdf(temp_htmlurl, pdfUrl);
 		
@@ -108,7 +109,7 @@ String currentday = new SimpleDateFormat("yyyyMMdd").format(new Date());
 	}
 	
 	public void convertHtml2Pdf(String srcfile,String dest) throws DocumentException, IOException {
-		Document document=new Document();
+		Document document=new Document(PageSize.A4.rotate());
 		PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(dest));
 		document.open();
 		XMLWorkerHelper.getInstance().parseXHtml(writer, document, new FileInputStream(srcfile), Charset.forName("utf-8"));
